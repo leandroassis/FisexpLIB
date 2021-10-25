@@ -5,7 +5,7 @@
 
 # Introduction
 
-This project is script to calculate and plot some statistic data to made the displines works.
+This project is a script to calculate and plot some statistic data to made the displines works.
 
 # Usage
 
