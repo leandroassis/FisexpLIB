@@ -3,6 +3,7 @@ from math import log10, floor, pi
 import pandas as pd
 import scipy.optimize as spopt
 import numpy as np
+import sys
 #import statsmodels.api as sm https://stackoverflow.com/questions/26050855/getting-uncertainty-values-in-linear-regression-with-python
 
 fit_type, output_file, export_plot, Xaxis, Yaxis, input_file, Xlabel, Ylabel, Xunit, Yunit, minimum_x_uncertainty, minimum_y_uncertainty = "linear", "saida.csv", True, 0, 0, 0, 0, 0, 0, 0, 0.01, 0.01
@@ -10,7 +11,7 @@ separator = ";"
 codification = "utf-8"
 
 valid_units = ["s", "ms", "h", "V", "F", "m", "m/s", "m/s²", "km/h", "N/m", "kgf", "Ohms", "uF", "mF", "nF", "dB"]
-valid_fits = ["linear", "exponencial"]
+valid_fits = ["linear", "exponential"]
 
 #   Definição de erros
 InvalidOption = 2
@@ -20,64 +21,35 @@ InvalidUncertainty = 5
 NoInputFile = 6
 NoAxis = 7
 
-
-def handleOptions(opts):
-    global fit_type, output_file, export_plot, Xaxis, Yaxis, input_file, Xlabel, Ylabel, Xunit, Yunit, minimum_x_uncertainty, minimum_y_uncertainty, separator, codification
-
-    for o, a in opts:
-        if o == "--fit":
-            if a in valid_fits:
-                fit_type = a
-            else:
-                raise InvalidFit
-        elif o == "--save":
-            output_file = a
-        elif o == "--plot":
-            export_plot = True
-        elif o == "--axis_x":
-            Xaxis = a
-        elif o == "--axis_y":
-            Yaxis = a
-        elif o == "--file":
-            input_file = a
-        elif o == "--name_x":
-            Xlabel = a
-        elif o == "--name_y":
-            Ylabel = a
-        elif o == "--unit_x":
-            if a in valid_units:
-                Xunit = a
-            else:
-                raise InvalidUnit
-        elif o == "--unit_y":
-            if a in valid_units:
-                Yunit = a
-            else:
-                raise InvalidUnit
-        elif o == "--minimum_x_uncertainty":
-            if type(a) == float:
-                minimum_x_uncertainty = a
-            else: 
-                raise InvalidUncertainty
-        elif o == "--minimum_y_uncertainty":
-            if type(a) == float:
-                minimum_y_uncertainty = a
-            else:
-                raise InvalidUncertainty
-        elif o == "--separator":
-            separator = a
-        elif o == "--codification":
-            codification = a
-
 def LinearFit(L, a, b):
     return a*L+b
 
 def ExponentialFit(x, a, b, c , d):
     return a*np.exp(b-c*x)+d
 
+def HelpCommand():
+    print("Usage:\npython3 main.py --file=_data_file.csv_ --axis_x=_column_with_x_data_ --axis_y=_column_with_y_data_ *others-options*")
+
+    print("Options:")
+    print("save=[output file name] - Save the output data into the required file.")
+    print("fit=[required fit type] - Define the fit to be used. Use linear to linear fit or exponential to exponetial fit")
+    print("axis_x=[column name with X data] - Define the column that contains X data")
+    print("axis_y=[column name with Y data] - Define the column that contains Y data")
+    print("file=[input file name] - Path to input file .csv")
+    print("name_x=[required name] - Define the x label in plot")
+    print("name_y=[required name] - Define the y label in plot")
+    print("unit_x=[x data unit] - Not used in this version")
+    print("unit_y=[y data unit] - Not used in this version")
+    print("minimum_x_uncertainty=[minimum value to uncertainty] - Used to limite the calculate X uncertainty")
+    print("minimum_y_uncertainty=[minimum value to uncertainty] - Used to limit the calculate Y uncertainty")
+    print("plot - Show the plot and save it")
+    print("codification=[input file enconding] - Define the input file enconding")
+    print("separator=[input file separators] - Define the input file separatos")
+    print("help - Show commands")
+
 class DataAnalysis():
     def __init__(self, file, X, Y, separator, codification):
-        self.data = pd.read_csv(file, separator=separator, encoding=codification)
+        self.data = pd.read_csv(file, sep=separator, encoding=codification)
         self.Xmeasure = self.data[X]
         self.Ymeasure = self.data[Y]
 

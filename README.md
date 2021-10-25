@@ -1,9 +1,21 @@
-# **iblioteca em python para Física Experimental** 
+# **Experimental Physics Python Library** 
+
 ## Made by: Leandro Assis dos Santos
+## Date: 24-10-2021 (Revision 1)
 
 # Introduction
 
+This project is script to calculate and plot some statistic data to made the displines works.
+
 # Usage
+
+After installing all dependencies just run:
+
+'''
+python3 main.py --file=_data_file.csv_ --axis_x=_column_with_x_data_ --axis_y=_column_with_y_data_ *others-options*
+'''
+
+See --help option to all options description.
 
 # Future uploads
 
